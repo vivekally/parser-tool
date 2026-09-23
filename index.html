@@ -214,6 +214,19 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
 .t3-msg-text{font-size:0.85rem;color:var(--text-muted);line-height:1.5;padding-top:4px}
 .t3-msg-text strong{color:var(--text)}
 
+/* ---- TRACK EXPLORATION ---- */
+.expl-group-label{font-family:var(--font-mono);font-size:0.68rem;letter-spacing:0.1em;text-transform:uppercase;color:var(--text-dim);margin:32px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--border)}
+.expl-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:22px;margin-bottom:12px;display:grid;grid-template-columns:1fr auto;gap:20px;align-items:start}
+.expl-main{min-width:0}
+.expl-name{font-family:var(--font-serif);font-size:1.05rem;font-weight:500;color:#fff;margin-bottom:4px}
+.expl-size{font-family:var(--font-mono);font-size:0.72rem;color:var(--teal);margin-bottom:8px}
+.expl-why{font-size:0.82rem;color:var(--text-muted);line-height:1.55}
+.expl-why strong{color:var(--text)}
+.expl-verdict{font-family:var(--font-mono);font-size:0.62rem;letter-spacing:0.06em;text-transform:uppercase;padding:6px 12px;border-radius:20px;white-space:nowrap;text-align:center}
+.v-dead{background:rgba(239,68,68,0.1);color:#EF4444;border:1px solid rgba(239,68,68,0.2)}
+.v-contested{background:rgba(245,158,11,0.1);color:var(--dot-i);border:1px solid rgba(245,158,11,0.2)}
+.v-strong{background:var(--teal-dim);color:var(--teal);border:1px solid var(--border-teal)}
+
 /* ---- FOOTER ---- */
 .footer{border-top:1px solid var(--border);padding:40px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .footer-left{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim)}
@@ -237,6 +250,8 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
   .t3-arrow{transform:rotate(90deg)}
   .vert-grid{grid-template-columns:1fr 1fr}
   [data-tip]::after{left:0;transform:none;max-width:220px}
+  .expl-card{grid-template-columns:1fr;gap:12px}
+  .expl-verdict{justify-self:start}
 }
 </style>
 </head>
@@ -497,7 +512,7 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
             <td>Students/Research</td>
           </tr>
           <tr>
-            <td><a href="https://www.docusign.com/products/platform/iris" target="_blank" rel="noopener" class="prod-link" data-tip="Signer-facing 'translate legalese' AI (Jan 2026). DocuSign holds ~67.6% e-sig market share. Direct threat to the consumer contract wedge.">DocuSign (Iris)</a> <span class="dot dot-v"></span></td>
+            <td><a href="https://www.docusign.com/products/platform/iris" target="_blank" rel="noopener" class="prod-link" data-tip="Signer-facing 'translate legalese' AI (Jan 2026). Market share is contested: ~34% global (1B+ users), 35-40% US e-signature. A frequently-cited 67% applies only to a narrower 'digital signature sector' cut. Direct threat to the consumer contract wedge.">DocuSign (Iris)</a> <span class="dot dot-v"></span></td>
             <td class="yes">Yes</td>
             <td class="partial">Partial</td>
             <td class="no">No</td>
@@ -528,24 +543,24 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
     <!-- Market sizing -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px">
       <div class="ent-card">
-        <div class="ent-card-value">$2&ndash;24B</div>
-        <div class="ent-card-label" data-tip="Document-centric collaboration: ~$2-2.3B. Broader collaborative writing: ~$24.2B. 8.8-13% CAGR. Key players: Microsoft, Google, Notion, Atlassian.">Doc Creation &amp; Collab Market <span class="dot dot-i"></span></div>
-        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Wide range by scope. ~$15&ndash;26B projected by 2033&ndash;34.</div>
+        <div class="ent-card-value">~$2.3B</div>
+        <div class="ent-card-label" data-tip="Document-centric collaboration software, 2025 (Cognitive Market Research). Narrower definition chosen deliberately. A broader 'collaborative writing' definition puts it at ~$24.2B, but that scope includes tools Parser does not compete with.">Doc Collaboration Market <span class="dot dot-i"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Document-centric scope. 8.8&ndash;13% CAGR. Broader "collaborative writing" definition reaches ~$24B.</div>
       </div>
       <div class="ent-card">
-        <div class="ent-card-value">$5&ndash;17B</div>
-        <div class="ent-card-label" data-tip="E-sig platform: ~$5.1B (2024) to ~$16.8B broader digital signatures (2026). 22-35% CAGR. DocuSign holds ~67.6% market share. Projected $24.5-121B by 2030-33.">E-Signature Market <span class="dot dot-v"></span></div>
-        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">22&ndash;35% CAGR. DocuSign 67.6% share. Projected $24&ndash;121B by 2030&ndash;33.</div>
+        <div class="ent-card-value">~$7.0B</div>
+        <div class="ent-card-label" data-tip="E-signature platform market, 2025 (Mordor Intelligence). The broader 'digital signatures' category reaches ~$9-17B (2026) but includes PKI/certificate infrastructure that is not Parser's market.">E-Signature Platform <span class="dot dot-v"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Platform scope, 2025. 22&ndash;35% CAGR. DocuSign ~34% global, 35&ndash;40% US.</div>
       </div>
       <div class="ent-card">
-        <div class="ent-card-value">73%</div>
-        <div class="ent-card-label" data-tip="University of Law UK study. 91% accept T&Cs without reading (Goldberg Law). Up to 98% don't fully read ToS. Top reasons: too long, too complex, low perceived payoff.">Don't Read Before Signing <span class="dot dot-v"></span></div>
-        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">University of Law UK: 73% don't properly read contracts. 91% skip T&amp;Cs entirely.</div>
+        <div class="ent-card-value">68%</div>
+        <div class="ent-card-label" data-tip="University of Law UK: 68% either don't read OR don't understand contracts they sign for subscriptions and utilities. 13% say they 'hardly' or 'never' read them. Note: a widely-circulated '73%' figure is from an Adobe survey measuring something different (how often people work with contracts), and is frequently misquoted.">Don't Read or Understand <span class="dot dot-v"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">University of Law UK: 68% don't read <em>or don't understand</em> contracts. 13% hardly ever read.</div>
       </div>
       <div class="ent-card">
         <div class="ent-card-value">$1.2&ndash;3B</div>
-        <div class="ent-card-label" data-tip="Contract Lifecycle Management. Range across Grand View ($1.78B), IMARC ($2.05B), Precedence ($2.96B). 12-17% CAGR. Incumbents: Ironclad (~$150M ARR), LinkSquares, Spellbook.">CLM Market 2025 <span class="dot dot-i"></span></div>
-        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Range across Grand View, IMARC, Precedence. ~12&ndash;17% CAGR.</div>
+        <div class="ent-card-label" data-tip="Contract Lifecycle Management, 2025. Range reflects three analysts sizing the SAME definition: Grand View $1.78B, IMARC $2.05B, Precedence $2.96B. Incumbents: Ironclad (~$150M ARR est.), LinkSquares, Spellbook.">CLM Market 2025 <span class="dot dot-i"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Three analysts, same definition. ~12&ndash;17% CAGR. Spread is analyst variance, not scope.</div>
       </div>
     </div>
 
@@ -555,9 +570,9 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
       <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:20px;max-width:620px">Verticals where document comprehension at signing time is highest-stakes and least supported by current tools. <span class="dot dot-v"></span></p>
 
       <div class="vert-grid">
-        <div class="vert-card" data-tip="~4.1M US home sales/year (2025). Each transaction involves 100-400 pages. Agents spend 22% of time on paperwork (NAR). Buyers rarely read full closing packages.">
+        <div class="vert-card" data-tip="4.06M US existing-home sales in 2025 (NAR) — essentially flat vs 2024 and a 30-year low, so volume is a headwind not a tailwind. Page-count claims (100-400 per closing) circulate widely in industry blogs but no primary source was found.">
           <div class="vert-card-name">Real Estate</div>
-          <div class="vert-card-desc">100&ndash;400 page closing packages. 4.1M US sales/yr. Buyers almost never read the full stack.</div>
+          <div class="vert-card-desc">4.06M US sales in 2025 &mdash; a 30-year low. Closing packages run to hundreds of pages. <span class="dot dot-i"></span></div>
         </div>
         <div class="vert-card" data-tip="28% CAGR in e-sig adoption. ~12% of total e-sig market. Consent forms, clinical trials, HIPAA disclosures are dense and high-stakes.">
           <div class="vert-card-name">Healthcare</div>
@@ -594,51 +609,90 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
     <!-- Pain point stats -->
     <div class="ent-grid">
       <div class="ent-card">
-        <div class="ent-card-value">~80%</div>
-        <div class="ent-card-label">Features rarely/never used <span class="dot dot-v"></span></div>
-        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Pendo 2019: only ~12% of features generate 80% of daily usage volume.</div>
+        <div class="ent-card-value">up to 80%</div>
+        <div class="ent-card-label" data-tip="Pendo Feature Adoption Report, 2019 — analysis of 615 Pendo subscriptions. Source says 'up to 80%' rarely or never utilized, and that ~12% of features generate 80% of daily usage. Now 7 years old; treat as directional.">Features rarely/never used <span class="dot dot-i"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Pendo, <strong>2019</strong> (7 yrs old). ~12% of features drive 80% of usage. Directional only.</div>
       </div>
       <div class="ent-card">
         <div class="ent-card-value">$10.9M</div>
-        <div class="ent-card-label">Annual loss per 1K employees <span class="dot dot-v"></span></div>
-        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Whatfix/Forrester study (2026): ~728 hours lost per employee from poor digital adoption.</div>
+        <div class="ent-card-label" data-tip="VENDOR-COMMISSIONED: Whatfix paid for this Forrester study, and Whatfix sells the solution. Also internally inconsistent — $10.9M across 1,000 employees is $10,900 each, but the same release claims 728 hours lost per employee, implying a ~$15/hour loaded cost at firms with $1B+ revenue. Use the direction, not the decimal.">Claimed annual loss / 1K staff <span class="dot dot-a"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem"><strong style="color:var(--dot-i)">Vendor-commissioned</strong> (Whatfix/Forrester, 2026). Their 728 hrs/employee figure doesn't reconcile with this dollar number.</div>
       </div>
       <div class="ent-card">
         <div class="ent-card-value">$0.9&ndash;2.7B</div>
-        <div class="ent-card-label">DAP Market 2024&ndash;25 <span class="dot dot-i"></span></div>
-        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Wide analyst variance (~4x). Growing ~18&ndash;22% CAGR.</div>
+        <div class="ent-card-label" data-tip="Digital Adoption Platform market, 2024-25. Estimates span ~4x across analysts (Virtue $624M to Report Prime $2.77B) because definitions differ on whether services are included. No single figure is authoritative.">DAP Market 2024&ndash;25 <span class="dot dot-i"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">~4x spread across analysts from differing definitions. ~18&ndash;22% CAGR.</div>
       </div>
     </div>
 
     <!-- Agent reliability benchmarks -->
     <div class="s-label" style="margin-top:40px">Agent Reliability &mdash; Why Guided First</div>
-    <div class="s-title" style="font-size:1.2rem">Current computer-use agent scores <span class="dot dot-v"></span></div>
-    <p class="s-desc">Best-in-class agents score well below human reliability. This validates the phased approach: guided walkthroughs first, autonomous execution only when reliability clears a high bar.</p>
+    <div class="s-title" style="font-size:1.2rem">Agents beat humans on short tasks. They collapse on long ones. <span class="dot dot-v"></span></div>
+    <p class="s-desc">The common "agents score below humans" argument is <strong style="color:var(--text)">no longer true</strong> and shouldn't be used. On OSWorld-Verified, top agents now exceed the human baseline. The real case for guided-first is long-horizon failure and unreliable measurement.</p>
 
-    <div class="bar-chart">
-      <div class="bar-row">
-        <span class="bar-label">Human baseline</span>
-        <div class="bar-track"><div class="bar-fill dim" style="width:75%">~72&ndash;78%</div></div>
+    <!-- Chart 1: OSWorld-Verified - agents now exceed human -->
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;margin-bottom:16px">
+      <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">OSWorld-Verified &mdash; short tasks</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:20px">369 tasks. Agents have passed the human baseline. <span style="color:var(--dot-i)">All scores vendor self-reported.</span></div>
+      <div class="bar-chart" style="margin:0">
+        <div class="bar-row">
+          <span class="bar-label" data-tip="Qwen3.8-Max, August 2026. Vendor self-reported — no independent verification exists for any OSWorld-Verified entry.">Qwen3.8-Max</span>
+          <div class="bar-track"><div class="bar-fill teal" style="width:86%">86.1%</div></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" data-tip="Claude Mythos Preview, 2026. Vendor self-reported.">Claude Mythos Prev.</span>
+          <div class="bar-track"><div class="bar-fill teal" style="width:85%">85.4%</div></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" data-tip="Claude Opus 4.8, 2026. Vendor self-reported.">Claude Opus 4.8</span>
+          <div class="bar-track"><div class="bar-fill teal" style="width:83%">83.4%</div></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" data-tip="Human baseline from the original OSWorld paper, measured across 369 tasks. Top agents now exceed this by ~14 points.">Human baseline</span>
+          <div class="bar-track"><div class="bar-fill dim" style="width:72%">72.4%</div></div>
+        </div>
       </div>
-      <div class="bar-row">
-        <span class="bar-label">Simular (OSWorld)</span>
-        <div class="bar-track"><div class="bar-fill indigo" style="width:70%">69.9%</div></div>
+    </div>
+
+    <!-- Chart 2: OSWorld 2.0 - long horizon collapse -->
+    <div style="background:var(--bg-card);border:1px solid var(--border-teal);border-radius:12px;padding:24px;margin-bottom:24px">
+      <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--teal);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px">OSWorld 2.0 &mdash; long-horizon tasks</div>
+      <div style="font-size:0.85rem;color:var(--text-muted);margin-bottom:20px">108 tasks, ~1.6h median for a skilled human, 500-step budget. Released June 2026 because the older benchmark's short tasks <em>"overstate real progress."</em></div>
+      <div class="bar-chart" style="margin:0">
+        <div class="bar-row">
+          <span class="bar-label" data-tip="Claude Opus 5 at 'max' effort, partial-credit scoring (Snorkel leaderboard). Partial credit rewards checkpoints reached, not task completion.">Opus 5 (partial)</span>
+          <div class="bar-track"><div class="bar-fill indigo" style="width:78%">77.7%</div></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" data-tip="Claude Opus 5 at 'max' effort, binary completion — the task either finished or it didn't. This is the number that matters for autonomous execution.">Opus 5 (binary)</span>
+          <div class="bar-track"><div class="bar-fill teal" style="width:44%">44.3%</div></div>
+        </div>
+        <div class="bar-row">
+          <span class="bar-label" data-tip="Claude Opus 4.8 binary completion per the official OSWorld 2.0 site. Blog claims of ~72% for this benchmark are partial scores quoted as if binary.">Opus 4.8 (binary)</span>
+          <div class="bar-track"><div class="bar-fill teal" style="width:21%">20.6%</div></div>
+        </div>
       </div>
-      <div class="bar-row">
-        <span class="bar-label">IBM CUGA (WebArena)</span>
-        <div class="bar-track"><div class="bar-fill indigo" style="width:62%">~61.7%</div></div>
+      <div style="font-size:0.78rem;color:var(--text-muted);margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <strong style="color:var(--text)">This is the number that matters.</strong> Enterprise workflows are long-horizon. Binary completion between 20% and 44% is why "do it for me" cannot ship unguarded.
       </div>
-      <div class="bar-row">
-        <span class="bar-label">OpenAI CUA (WebArena)</span>
-        <div class="bar-track"><div class="bar-fill teal" style="width:58%">58.1%</div></div>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Anthropic (real tasks)</span>
-        <div class="bar-track"><div class="bar-fill teal" style="width:50%">~50%</div></div>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">OpenAI CUA (OSWorld)</span>
-        <div class="bar-track"><div class="bar-fill teal" style="width:38%">38.1%</div></div>
+    </div>
+
+    <!-- Measurement reliability callout -->
+    <div style="background:var(--bg-card);border:1px solid rgba(239,68,68,0.18);border-radius:12px;padding:24px;margin-bottom:24px">
+      <div style="font-family:var(--font-mono);font-size:0.7rem;color:#EF4444;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px">The scores themselves are unreliable</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px">
+        <div>
+          <div style="font-family:var(--font-mono);font-size:1.4rem;color:#EF4444;margin-bottom:4px">0 tasks</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5">UC Berkeley (Apr 2026) hit <strong style="color:var(--text)">~100% on WebArena and 73% on OSWorld while solving zero tasks</strong> — reading answer configs via <code style="font-family:var(--font-mono);font-size:0.75rem">file://</code> and exploiting <code style="font-family:var(--font-mono);font-size:0.75rem">eval()</code> on agent-controlled strings. Eight benchmarks broken. <span class="dot dot-v"></span></div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:1.4rem;color:#EF4444;margin-bottom:4px">20&ndash;30 pts</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5">Swing on WebArena for the <strong style="color:var(--text)">same model</strong> from scaffold changes alone. Claude Opus 4 scores 64.9% in one framework, 57.6% in another. ~10.7% of audited failures were evaluator false negatives. <span class="dot dot-v"></span></div>
+        </div>
+        <div>
+          <div style="font-family:var(--font-mono);font-size:1.4rem;color:#EF4444;margin-bottom:4px">0 of 26</div>
+          <div style="font-size:0.8rem;color:var(--text-muted);line-height:1.5">OSWorld-Verified leaderboard entries that are <strong style="color:var(--text)">independently verified</strong>. All 26 are vendor self-reported, and trackers disagree on provenance labels for identical numbers. <span class="dot dot-v"></span></div>
+        </div>
       </div>
     </div>
 
@@ -698,12 +752,12 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
               <td>$125M E, ~$900M val</td>
             </tr>
             <tr>
-              <td><a href="https://www.pendo.io/" target="_blank" rel="noopener" class="prod-link" data-tip="~$300M ARR (2025), $2.6B val (2021). Analytics-first product adoption. 2019 report: ~12% features drive 80% of usage. $50K+ enterprise pricing.">Pendo</a> <span class="dot dot-v"></span></td>
+              <td><a href="https://www.pendo.io/" target="_blank" rel="noopener" class="prod-link" data-tip="~$300M ARR (2025 estimate). The $2.6B valuation dates to 2021 and is 5 years stale — no newer round found. Analytics-first product adoption. $50K+ enterprise pricing.">Pendo</a> <span class="dot dot-v"></span></td>
               <td class="yes">Yes</td>
               <td class="no">Limited</td>
               <td class="partial">Some</td>
               <td class="partial">Partial</td>
-              <td>~$300M ARR, $2.6B val</td>
+              <td>~$300M ARR; $2.6B val <em style="color:var(--text-dim)">(2021)</em></td>
             </tr>
             <tr>
               <td><a href="https://www.commandai.com/" target="_blank" rel="noopener" class="prod-link" data-tip="Acquired by Amplitude ~$45M+ (Oct 2024). Cmd+K + chat copilot. Single-line install, 25M+ end users. $23.8M raised, ~30 employees.">Command AI</a> <span class="dot dot-v"></span></td>
@@ -714,12 +768,12 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
               <td>Acq by Amplitude ~$45M+</td>
             </tr>
             <tr>
-              <td><a href="https://browser-use.com/" target="_blank" rel="noopener" class="prod-link" data-tip="Open-source browser automation. $17M seed (March 2025). 79K+ GitHub stars. NL commands to DOM parsing. Free OSS + ~$30/mo cloud.">Browser Use</a> <span class="dot dot-v"></span></td>
+              <td><a href="https://browser-use.com/" target="_blank" rel="noopener" class="prod-link" data-tip="Open-source browser automation. $17M seed (March 2025). 116,079 GitHub stars and 12,781 forks as of Sept 2026 — up from ~79K when first researched. NL commands to DOM parsing. Free OSS + ~$30/mo cloud.">Browser Use</a> <span class="dot dot-v"></span></td>
               <td class="no">No</td>
               <td class="yes">Yes</td>
               <td class="yes">Yes</td>
               <td class="partial">Partial</td>
-              <td>$17M seed, 79K+ GH stars</td>
+              <td>$17M seed, 116K GH stars</td>
             </tr>
             <tr>
               <td><a href="https://openai.com/index/introducing-operator/" target="_blank" rel="noopener" class="prod-link" data-tip="Computer-use agent (CUA). 38.1% OSWorld, 58.1% WebArena, 87% WebVoyager. Pro subscription. Still experimental.">OpenAI Operator</a> <span class="dot dot-v"></span></td>
@@ -730,12 +784,12 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
               <td>Part of OpenAI</td>
             </tr>
             <tr>
-              <td><a href="https://supademo.com/" target="_blank" rel="noopener" class="prod-link" data-tip="Interactive demo builder. HTML capture for auto-mapping. Free tier + paid plans. Leading demo-builder in the category alongside Navattic and Storylane.">Supademo</a> <span class="dot dot-v"></span></td>
+              <td><a href="https://supademo.com/" target="_blank" rel="noopener" class="prod-link" data-tip="Interactive demo builder. HTML capture for auto-mapping. Free tier + paid plans. Comparable in scale to Navattic (~$5.6M raised) and Storylane (seed only) — none is a clear category leader.">Supademo</a> <span class="dot dot-v"></span></td>
               <td class="yes">Yes (demo)</td>
               <td class="no">No</td>
               <td class="partial">Some</td>
               <td class="partial">Partial (HTML capture)</td>
-              <td>Seed; demo-builder leader</td>
+              <td>Seed stage <span class="dot dot-i"></span></td>
             </tr>
             <tr class="comp-highlight">
               <td>Parser <span class="dot dot-a"></span></td>
@@ -805,17 +859,100 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
 
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:32px">
       <div class="ent-card">
-        <div class="ent-card-title">From 30 clicks to one sentence</div>
+        <div class="ent-card-title">From 30 clicks to one sentence <span class="dot dot-a"></span></div>
         <div class="ent-card-desc">Users describe what they want in natural language. Parser navigates the legacy UI, fills forms, and executes the workflow. Human confirms before consequential actions.</div>
       </div>
       <div class="ent-card">
-        <div class="ent-card-title">No rip-and-replace</div>
+        <div class="ent-card-title">No rip-and-replace <span class="dot dot-a"></span></div>
         <div class="ent-card-desc">Parser works as an overlay. The legacy system stays intact. IT doesn't need to migrate data or retrain teams. The AI layer learns the existing workflow graph.</div>
       </div>
       <div class="ent-card">
-        <div class="ent-card-title">Progressive trust</div>
+        <div class="ent-card-title">Progressive trust <span class="dot dot-a"></span></div>
         <div class="ent-card-desc">Starts by showing the user what to click (guided). Graduates to doing it with confirmation (co-pilot). Eventually acts autonomously on routine tasks the user has approved.</div>
       </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACK EXPLORATION -->
+<section class="section" id="track-exploration">
+  <div class="container">
+    <div class="s-label">Track Exploration</div>
+    <div class="s-title">Seven adjacent markets, evaluated</div>
+    <p class="s-desc">Where else the zoom interaction could go. Verdicts are deliberately skeptical: most of these are already solved, and knowing which ones is worth more than a list of opportunities. <span class="dot dot-v"></span></p>
+
+    <div class="expl-group-label">Warm &mdash; near Unmodal's existing Legal/Justice/Government and Financial verticals</div>
+
+    <div class="expl-card">
+      <div class="expl-main">
+        <div class="expl-name">Legislative &amp; Regulatory Documents</div>
+        <div class="expl-size">RegTech ~$21.8&ndash;24B (2026) &middot; 19&ndash;22% CAGR</div>
+        <div class="expl-why">The only track where zoom is a <strong>capability rather than a skin</strong> — statutes are natively hierarchical (title &rarr; section &rarr; subsection), so compression follows real structure. The incumbent is collapsing: <strong>FiscalNote was delisted from the NYSE on 13 Apr 2026</strong>, now trades OTC, cut FY26 guidance to $75&ndash;78M, cut 25% of staff, and has stated going-concern doubt. Honest caveat: pure policy intelligence is small &mdash; FiscalNote's entire revenue is under $80M. Treat as a consultancy-led beachhead, not a venture-scale market.</div>
+      </div>
+      <span class="expl-verdict v-strong">Strongest fit</span>
+    </div>
+
+    <div class="expl-card">
+      <div class="expl-main">
+        <div class="expl-name">Financial Research &amp; Filings</div>
+        <div class="expl-size">Investment research platforms $7.51B (2026) &rarr; $13.25B (2030) &middot; 15.2% CAGR</div>
+        <div class="expl-why">Best warm fit on paper, but read the Hebbia signal carefully. <strong>Hebbia is the closest technical twin to Parser and it flatlined</strong> — still at its July 2024 $130M Series B and $700M valuation on roughly $13M ARR, no newer round found. Meanwhile AlphaSense raised $350M at <strong>$7.5B on $600M+ ARR</strong> (June 2026) and owns distribution. Analysts want citation-anchored extraction they can defend in a memo, not a nicer reading altitude.</div>
+      </div>
+      <span class="expl-verdict v-contested">Contested</span>
+    </div>
+
+    <div class="expl-card">
+      <div class="expl-main">
+        <div class="expl-name">eDiscovery &amp; Litigation Review</div>
+        <div class="expl-size">$15.4&ndash;19.6B (2025) &middot; 6.7&ndash;10.9% CAGR</div>
+        <div class="expl-why">Large market, but the price umbrella just vanished. <strong>Relativity made aiR for Review and Privilege free and standard in RelativityOne in early 2026; Everlaw matched within weeks.</strong> DISCO shipped agentic review across millions of documents. Triage here is recall statistics and TAR, not human skimming — reviewers code documents one at a time against a coding manual, so a reading-altitude UI doesn't fit the workflow. Narrow wedge only: privilege logs and deposition prep.</div>
+      </div>
+      <span class="expl-verdict v-dead">Already solved</span>
+    </div>
+
+    <div class="expl-card">
+      <div class="expl-main">
+        <div class="expl-name">M&amp;A Diligence &amp; Data Rooms</div>
+        <div class="expl-size">~$3.0&ndash;3.4B (2025) &middot; 15&ndash;22% CAGR</div>
+        <div class="expl-why">Wrong shape for the product. The unit of work is a heterogeneous <strong>file set</strong> (1,500&ndash;4,500 files on a $1&ndash;300M deal; 5,000&ndash;50,000 on larger), not one long document. Corpus-level zoom is a materially different product from document-level zoom. Distribution is gated by bankers and VDR vendors — Datasite acquired Ansarada (~$154M, 2024), Intralinks sits inside SS&amp;C.</div>
+      </div>
+      <span class="expl-verdict v-dead">Wrong shape</span>
+    </div>
+
+    <div class="expl-group-label">Blue sky &mdash; larger markets, further from Unmodal's current business</div>
+
+    <div class="expl-card">
+      <div class="expl-main">
+        <div class="expl-name">Meeting &amp; Transcript Intelligence</div>
+        <div class="expl-size">$28.5&ndash;32.25B (2026) &middot; ~12.7% CAGR</div>
+        <div class="expl-why">Biggest market on this list and the most thoroughly solved. <strong>Summary &rarr; chapters &rarr; topic &rarr; full transcript is semantic zoom</strong>, and every incumbent already ships it. Gong is at $500M ARR, Granola raised $125M at $1.5B (Mar 2026), Fireflies is around $1B with 16M users. There is no unmet need for Parser to serve here.</div>
+      </div>
+      <span class="expl-verdict v-dead">Already shipped</span>
+    </div>
+
+    <div class="expl-card">
+      <div class="expl-main">
+        <div class="expl-name">Developer Tools &amp; Diff Comprehension</div>
+        <div class="expl-size">AI code tools $7.34B (2025) &middot; ~26% CAGR</div>
+        <div class="expl-why">Real pain, but the market answered "huge diff" with <strong>agentic review comments, not a reading UI</strong>, and review is being absorbed into the editor — Cursor/Anysphere acquired Graphite in Dec 2025 above its $290M valuation. CodeRabbit raised $143M at $1.5B. It also overlaps Parser's existing legacy-modernization track (same buyer), so it isn't really a new track.</div>
+      </div>
+      <span class="expl-verdict v-dead">Solved differently</span>
+    </div>
+
+    <div class="expl-card">
+      <div class="expl-main">
+        <div class="expl-name">Clinical Documentation</div>
+        <div class="expl-size">Ambient scribes ~$600M revenue (2025) &middot; 2.4x YoY</div>
+        <div class="expl-why">Wrong job plus hostile gates. The work is <strong>generating a note from audio</strong>, not compressing a document that already exists — the opposite direction from Parser. Abridge raised $300M at $5.3B (Apr 2026), Ambience $243M at $1.25B, Nuance DAX is in 550+ organizations. Layer on HIPAA/BAA, Designated Record Set policy, state notification law, and an open FDA SaMD discussion paper (Aug 2026). Concept-stage with no clinical partner: don't.</div>
+      </div>
+      <span class="expl-verdict v-dead">Avoid</span>
+    </div>
+
+    <div style="background:var(--bg-card);border:1px solid var(--border-teal);border-radius:12px;padding:24px;margin-top:24px">
+      <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--teal);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:10px">What this says</div>
+      <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">
+        Five of seven adjacent markets are closed &mdash; either an incumbent already ships semantic zoom, or the unit of work doesn't match a document. The pattern is consistent: <strong style="color:var(--text)">zoom wins where documents are natively hierarchical and loses where the corpus is heterogeneous or the job is generation rather than compression.</strong> That points back at contracts and statutes, which is where Parser already started.
+      </p>
     </div>
   </div>
 </section>
@@ -824,7 +961,7 @@ a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
 <footer class="footer">
   <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
     <span class="footer-left">Parser &mdash; AI + HCI Document Layer &middot; Unmodal Research</span>
-    <span class="footer-right">Concept in Development &middot; Sept 2026</span>
+    <span class="footer-right">All figures verified as of 23 Sept 2026</span>
   </div>
 </footer>
 
