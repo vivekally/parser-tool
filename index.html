@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Parser — AI-Native Document Interaction Layer</title>
+<meta name="description" content="Parser: zoom out to compress a document into its gist using small and large language models, or select any line to rewrite it in place.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,700;1,9..144,400&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0B0B0E;
+  --bg-card: #141418;
+  --bg-card-hover: #1A1A20;
+  --bg-surface: #1E1E24;
+  --text: #E4E2DF;
+  --text-muted: #9A9892;
+  --text-dim: #6B6860;
+  --teal: #2DD4BF;
+  --teal-dim: rgba(45,212,191,0.12);
+  --teal-glow: rgba(45,212,191,0.25);
+  --indigo: #818CF8;
+  --indigo-dim: rgba(129,140,248,0.10);
+  --green-brand: #15803D;
+  --border: rgba(255,255,255,0.06);
+  --border-teal: rgba(45,212,191,0.2);
+  --border-indigo: rgba(129,140,248,0.2);
+  --dot-v: #22C55E;
+  --dot-i: #F59E0B;
+  --dot-a: #6B7280;
+  --font-serif: 'Fraunces', Georgia, serif;
+  --font-sans: 'Inter', -apple-system, sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+  --max-w: 1020px;
+  --gutter: 20px;
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{font-size:16px;-webkit-font-smoothing:antialiased}
+body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-weight:400;line-height:1.65}
+
+.container{max-width:var(--max-w);margin:0 auto;padding:0 var(--gutter)}
+.section{padding:80px 0}
+.section+.section{border-top:1px solid var(--border)}
+
+.dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:4px;vertical-align:middle;position:relative;top:-1px}
+.dot-v{background:var(--dot-v)}.dot-i{background:var(--dot-i)}.dot-a{background:var(--dot-a)}
+
+/* ---- NAV ---- */
+.nav{padding:20px 0;border-bottom:1px solid var(--border)}
+.nav-inner{display:flex;justify-content:space-between;align-items:center}
+.nav-brand{display:flex;align-items:baseline;gap:4px}
+.nav-brand-name{font-family:var(--font-serif);font-size:1.5rem;font-weight:700;color:#fff}
+.nav-brand-dot{color:var(--teal);font-size:1.8rem;line-height:1}
+.nav-badge{font-family:var(--font-mono);font-size:0.65rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--text-dim);border:1px solid var(--border);border-radius:20px;padding:4px 12px}
+
+/* ---- HERO ---- */
+.hero{padding:100px 0 80px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-100px;right:-160px;width:500px;height:500px;background:radial-gradient(circle,rgba(45,212,191,0.05) 0%,transparent 70%);pointer-events:none}
+.hero::after{content:'';position:absolute;bottom:-100px;left:-160px;width:400px;height:400px;background:radial-gradient(circle,rgba(129,140,248,0.04) 0%,transparent 70%);pointer-events:none}
+.hero-eyebrow{font-family:var(--font-mono);font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--teal);margin-bottom:16px}
+.hero h1{font-family:var(--font-serif);font-size:clamp(2rem,4.5vw,3rem);font-weight:500;line-height:1.25;color:#fff;max-width:720px;margin-bottom:20px}
+.hero h1 .hl-teal{color:var(--teal)}
+.hero h1 .hl-indigo{color:var(--indigo)}
+.hero-sub{font-size:1rem;color:var(--text-muted);max-width:600px;margin-bottom:40px}
+
+/* ---- SECTION HEADERS ---- */
+.s-label{font-family:var(--font-mono);font-size:0.7rem;letter-spacing:0.14em;text-transform:uppercase;color:var(--teal);margin-bottom:8px}
+.s-title{font-family:var(--font-serif);font-size:clamp(1.5rem,3vw,2rem);font-weight:500;color:#fff;margin-bottom:12px}
+.s-desc{color:var(--text-muted);max-width:620px;margin-bottom:40px}
+
+/* ---- ZOOM DEMO (recreated infographic) ---- */
+.zoom-demo{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;margin-bottom:40px}
+.zoom-levels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+.zoom-level{border:1px solid var(--border);border-radius:10px;padding:16px;transition:border-color 0.3s,background 0.3s;cursor:pointer;position:relative}
+.zoom-level.active{border-color:var(--teal);background:rgba(45,212,191,0.04)}
+.zoom-level-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.zoom-pct{font-family:var(--font-mono);font-size:0.8rem;font-weight:500;color:var(--teal)}
+.zoom-model{font-family:var(--font-mono);font-size:0.6rem;letter-spacing:0.06em;text-transform:uppercase;color:var(--text-dim)}
+.zoom-content{font-size:0.8rem;color:var(--text-muted);line-height:1.5}
+.zoom-lines{display:flex;flex-direction:column;gap:4px}
+.zoom-line{height:6px;background:var(--bg-surface);border-radius:3px}
+.zoom-line:nth-child(1){width:100%}.zoom-line:nth-child(2){width:85%}.zoom-line:nth-child(3){width:92%}.zoom-line:nth-child(4){width:70%}.zoom-line:nth-child(5){width:88%}
+.zoom-icon-gist{display:flex;align-items:center;justify-content:center;height:48px}
+.zoom-icon-gist svg{color:var(--teal);opacity:0.7}
+.zoom-slider{display:flex;align-items:center;gap:12px}
+.zoom-slider-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;white-space:nowrap}
+.zoom-slider-track{flex:1;height:4px;background:var(--bg-surface);border-radius:2px;position:relative;cursor:pointer}
+.zoom-slider-fill{position:absolute;top:0;left:0;height:100%;background:linear-gradient(90deg,var(--teal),var(--indigo));border-radius:2px;transition:width 0.4s}
+.zoom-slider-thumb{position:absolute;top:50%;transform:translate(-50%,-50%);width:14px;height:14px;background:#fff;border-radius:50%;box-shadow:0 0 8px rgba(45,212,191,0.4);transition:left 0.4s}
+.zoom-caption{text-align:center;font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-top:12px}
+
+/* ---- REWRITE DEMO ---- */
+.rewrite-demo{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;display:grid;grid-template-columns:1.2fr 1fr;gap:20px;align-items:start}
+.rw-doc{position:relative}
+.rw-doc-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.rw-text{font-size:0.9rem;color:var(--text-muted);line-height:1.7}
+.rw-text .highlight{background:rgba(129,140,248,0.15);border-bottom:2px solid var(--indigo);padding:1px 2px;color:var(--text);cursor:pointer}
+.rw-panel{background:var(--bg-surface);border:1px solid var(--border-indigo);border-radius:12px;padding:20px}
+.rw-panel-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--indigo);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:12px}
+.rw-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px}
+.rw-chip{font-family:var(--font-mono);font-size:0.7rem;padding:5px 12px;border-radius:20px;border:1px solid var(--border);color:var(--text-muted);cursor:pointer;transition:all 0.2s}
+.rw-chip.active{background:var(--indigo);border-color:var(--indigo);color:#fff}
+.rw-chip:hover{border-color:var(--indigo)}
+.rw-result{font-size:0.85rem;color:var(--text);font-style:italic;line-height:1.6;margin-bottom:10px}
+.rw-hint{font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim)}
+
+/* ---- USE CASES ---- */
+.uc-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.uc-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px}
+.uc-label{font-family:var(--font-mono);font-size:0.6rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px}
+.uc-title{font-family:var(--font-serif);font-size:1rem;font-weight:500;color:#fff;margin-bottom:8px}
+.uc-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5}
+
+/* ---- MODEL PIPELINE ---- */
+.pipeline{background:var(--bg-card);border:1px solid var(--border);border-radius:16px;padding:32px;margin-top:40px}
+.pipeline-title{font-family:var(--font-serif);font-size:1.1rem;font-weight:500;color:#fff;margin-bottom:8px}
+.pipeline-desc{font-size:0.85rem;color:var(--text-muted);margin-bottom:24px;max-width:600px}
+.pipeline-flow{display:flex;align-items:center;gap:0;justify-content:center;flex-wrap:wrap}
+.pipe-node{display:flex;flex-direction:column;align-items:center;gap:6px}
+.pipe-box{border:1px solid var(--border);border-radius:8px;padding:10px 24px;font-family:var(--font-mono);font-size:0.75rem;font-weight:500;text-transform:uppercase;letter-spacing:0.06em;color:#fff;white-space:nowrap}
+.pipe-box.teal{border-color:var(--teal);color:var(--teal);background:var(--teal-dim)}
+.pipe-box.indigo{border-color:var(--indigo);color:var(--indigo);background:var(--indigo-dim)}
+.pipe-label{font-size:0.65rem;color:var(--text-dim)}
+.pipe-arrow{color:var(--text-dim);font-size:1.2rem;margin:0 8px}
+
+/* ---- COMPETITIVE LANDSCAPE ---- */
+.comp-table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:0 calc(-1 * var(--gutter));padding:0 var(--gutter)}
+.comp-table{width:100%;border-collapse:collapse;font-size:0.78rem;min-width:700px}
+.comp-table th{font-family:var(--font-mono);font-size:0.65rem;text-transform:uppercase;letter-spacing:0.06em;color:var(--text-dim);text-align:left;padding:10px 12px;border-bottom:1px solid var(--border);white-space:nowrap}
+.comp-table td{padding:10px 12px;border-bottom:1px solid var(--border);color:var(--text-muted);vertical-align:top}
+.comp-table tr:hover td{background:rgba(255,255,255,0.02)}
+.comp-table td:first-child{color:#fff;font-weight:500;white-space:nowrap}
+.comp-table .yes{color:var(--dot-v)}.comp-table .no{color:var(--dot-a)}.comp-table .partial{color:var(--dot-i)}
+.comp-highlight{background:rgba(45,212,191,0.04) !important}
+.comp-highlight td{color:var(--teal) !important}
+
+/* ---- ENTERPRISE SECTION ---- */
+.ent-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-bottom:40px}
+.ent-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px}
+.ent-card-title{font-family:var(--font-serif);font-size:1rem;font-weight:500;color:#fff;margin-bottom:8px}
+.ent-card-value{font-family:var(--font-mono);font-size:1.8rem;font-weight:500;color:var(--teal);margin-bottom:4px}
+.ent-card-label{font-size:0.75rem;color:var(--text-dim)}
+.ent-card-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5}
+
+/* ---- PHASED APPROACH ---- */
+.phase-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.phase-card{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;padding:24px;position:relative;overflow:hidden}
+.phase-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.phase-card:nth-child(1)::before{background:var(--teal)}
+.phase-card:nth-child(2)::before{background:var(--indigo)}
+.phase-card:nth-child(3)::before{background:linear-gradient(90deg,var(--teal),var(--indigo))}
+.phase-num{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+.phase-title{font-family:var(--font-serif);font-size:1rem;font-weight:500;color:#fff;margin-bottom:8px}
+.phase-desc{font-size:0.82rem;color:var(--text-muted);line-height:1.5}
+.phase-status{font-family:var(--font-mono);font-size:0.65rem;margin-top:12px;color:var(--teal);text-transform:uppercase;letter-spacing:0.06em}
+
+/* ---- BENCHMARK SECTION ---- */
+.bench-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-bottom:32px}
+.bench-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:20px;text-align:center}
+.bench-name{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:6px}
+.bench-score{font-family:var(--font-mono);font-size:1.6rem;font-weight:500;color:var(--teal)}
+.bench-context{font-size:0.7rem;color:var(--text-dim);margin-top:4px}
+
+.bar-chart{margin:32px 0}
+.bar-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.bar-label{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-muted);width:140px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:22px;background:var(--bg-surface);border-radius:4px;position:relative;overflow:hidden}
+.bar-fill{height:100%;border-radius:4px;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;font-family:var(--font-mono);font-size:0.65rem;color:#fff;min-width:30px}
+.bar-fill.teal{background:linear-gradient(90deg,var(--teal-dim),var(--teal))}
+.bar-fill.indigo{background:linear-gradient(90deg,var(--indigo-dim),var(--indigo))}
+.bar-fill.dim{background:var(--bg-surface);border:1px solid var(--border);color:var(--text-dim)}
+
+/* ---- LEGEND ---- */
+.legend{position:fixed;bottom:20px;right:20px;background:var(--bg-surface);border:1px solid var(--border);border-radius:10px;padding:14px 18px;font-size:0.72rem;z-index:100;backdrop-filter:blur(12px)}
+.legend-title{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:8px}
+.legend-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;color:var(--text-muted)}
+.legend-row:last-child{margin-bottom:0}
+
+/* ---- FOOTER ---- */
+.footer{border-top:1px solid var(--border);padding:40px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+.footer-left{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim)}
+.footer-right{font-family:var(--font-mono);font-size:0.7rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em}
+
+/* ---- RESPONSIVE ---- */
+@media(max-width:700px){
+  :root{--gutter:16px}
+  .section{padding:56px 0}
+  .hero{padding:72px 0 56px}
+  .zoom-levels{grid-template-columns:repeat(2,1fr)}
+  .rewrite-demo{grid-template-columns:1fr}
+  .uc-grid{grid-template-columns:1fr}
+  .phase-grid{grid-template-columns:1fr}
+  .pipeline-flow{flex-direction:column;gap:8px}
+  .pipe-arrow{transform:rotate(90deg)}
+  .footer{flex-direction:column;text-align:center}
+  .bar-label{width:100px;font-size:0.6rem}
+  .legend{bottom:12px;right:12px;padding:10px 14px}
+}
+</style>
+</head>
+<body>
+
+<!-- CONFIDENCE LEGEND -->
+<div class="legend">
+  <div class="legend-title">Confidence</div>
+  <div class="legend-row"><span class="dot dot-v"></span> Verified</div>
+  <div class="legend-row"><span class="dot dot-i"></span> Inferred</div>
+  <div class="legend-row"><span class="dot dot-a"></span> Assumed</div>
+</div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="container nav-inner">
+    <div class="nav-brand">
+      <span class="nav-brand-name">Parser</span><span class="nav-brand-dot">.</span>
+    </div>
+    <span class="nav-badge">Concept in Development</span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="container">
+    <div class="hero-eyebrow">AI-Native Document Interaction Layer</div>
+    <h1>
+      <span class="hl-teal">Zoom out</span> to compress a document into its gist,
+      or <span class="hl-indigo">select any line</span> to rewrite it in place
+    </h1>
+    <p class="hero-sub">
+      Parser uses small and large language models in sequence, without ever leaving the page for a chat window. <span class="dot dot-a"></span>
+    </p>
+  </div>
+</header>
+
+<!-- FEATURE 01: ZOOM TO SUMMARIZE -->
+<section class="section">
+  <div class="container">
+    <div class="s-label">01 &mdash; Core Feature</div>
+    <div class="s-title">Zoom to summarize <span class="dot dot-a"></span></div>
+    <p class="s-desc">Pinch or scroll out and the document itself compresses. Sentence to paragraph to single line to icon. Regenerated live by a small model first, then a large model as you pull further back. Zoom in and the original text returns exactly as written.</p>
+
+    <!-- Interactive zoom demo -->
+    <div class="zoom-demo">
+      <div class="zoom-levels" id="zoomLevels">
+        <div class="zoom-level active" data-level="0">
+          <div class="zoom-level-head">
+            <span class="zoom-pct">100%</span>
+            <span class="zoom-model">Source</span>
+          </div>
+          <div class="zoom-content">
+            <div class="zoom-lines">
+              <div class="zoom-line"></div><div class="zoom-line"></div><div class="zoom-line"></div><div class="zoom-line"></div><div class="zoom-line"></div>
+            </div>
+          </div>
+        </div>
+        <div class="zoom-level" data-level="1">
+          <div class="zoom-level-head">
+            <span class="zoom-pct">50%</span>
+            <span class="zoom-model">SLM</span>
+          </div>
+          <div class="zoom-content">Termination requires 30 days' written notice; either party may end early for uncured breach.</div>
+        </div>
+        <div class="zoom-level" data-level="2">
+          <div class="zoom-level-head">
+            <span class="zoom-pct">15%</span>
+            <span class="zoom-model">LLM</span>
+          </div>
+          <div class="zoom-content">30-day notice to exit; breach ends it sooner.</div>
+        </div>
+        <div class="zoom-level" data-level="3">
+          <div class="zoom-level-head">
+            <span class="zoom-pct">Gist</span>
+            <span class="zoom-model">LLM</span>
+          </div>
+          <div class="zoom-content">
+            <div class="zoom-icon-gist">
+              <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M4 6h16M4 12h10M4 18h14M20 12l-3-3m3 3l-3 3"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="zoom-slider">
+        <span class="zoom-slider-label">&larr; zoom in</span>
+        <div class="zoom-slider-track" id="zoomTrack">
+          <div class="zoom-slider-fill" id="zoomFill" style="width:0%"></div>
+          <div class="zoom-slider-thumb" id="zoomThumb" style="left:0%"></div>
+        </div>
+        <span class="zoom-slider-label">zoom out &rarr;</span>
+      </div>
+      <div class="zoom-caption">continuous scroll-zoom, not a summarize button</div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURE 02: INLINE REWRITE -->
+<section class="section">
+  <div class="container">
+    <div class="s-label">02 &mdash; Core Feature</div>
+    <div class="s-title">Inline natural rewriting <span class="dot dot-a"></span></div>
+    <p class="s-desc">Select a line while drafting and ask for a different tone, length, or phrasing. The edit happens where the words already live. No copy, no paste, no separate chat thread.</p>
+
+    <div class="rewrite-demo">
+      <div class="rw-doc">
+        <div class="rw-doc-label">Draft.docx &mdash; Paragraph 3</div>
+        <div class="rw-text">We regret to inform you that <span class="highlight">your proposal did not meet our current requirements</span> and will not be moving forward at this time.</div>
+      </div>
+      <div class="rw-panel">
+        <div class="rw-panel-label">Rewrite Selection</div>
+        <div class="rw-chips">
+          <span class="rw-chip">Formal</span>
+          <span class="rw-chip active">Warmer</span>
+          <span class="rw-chip">Shorter</span>
+          <span class="rw-chip">Direct</span>
+        </div>
+        <div class="rw-result">"it wasn't the right fit for what we need right now &mdash; though we'd welcome a future submission"</div>
+        <div class="rw-hint">&crarr; to replace in place &middot; esc to discard</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- USE CASES -->
+<section class="section">
+  <div class="container">
+    <div class="uc-grid">
+      <div class="uc-card">
+        <div class="uc-label">Use Case 01</div>
+        <div class="uc-title">E-sign comprehension layer <span class="dot dot-a"></span></div>
+        <div class="uc-desc">Sits above DocuSign, PandaDoc, or any PDF a signer receives. Zoom out on an NDA to grasp it in seconds before signing.</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-label">Use Case 02</div>
+        <div class="uc-title">Drafting workspace <span class="dot dot-a"></span></div>
+        <div class="uc-desc">A standalone editor where every paragraph can be reshaped in place. Contracts, memos, proposals, reports.</div>
+      </div>
+      <div class="uc-card">
+        <div class="uc-label">Use Case 03</div>
+        <div class="uc-title">Long-document reading <span class="dot dot-a"></span></div>
+        <div class="uc-desc">Reports, research, and briefs collapse to their argument on zoom-out, then expand back to full citation-grade detail.</div>
+      </div>
+    </div>
+
+    <!-- Model Pipeline -->
+    <div class="pipeline">
+      <div class="pipeline-title">Small model first, large model when it matters <span class="dot dot-a"></span></div>
+      <div class="pipeline-desc">Zooming out escalates through model size only as compression deepens. Keeping the common case fast and cheap, reserving heavier reasoning for full-document synthesis.</div>
+      <div class="pipeline-flow">
+        <div class="pipe-node">
+          <div class="pipe-box">Document</div>
+          <div class="pipe-label">source text</div>
+        </div>
+        <span class="pipe-arrow">&rarr;</span>
+        <div class="pipe-node">
+          <div class="pipe-box teal">Small Model</div>
+          <div class="pipe-label">local, fast compression</div>
+        </div>
+        <span class="pipe-arrow">&rarr;</span>
+        <div class="pipe-node">
+          <div class="pipe-box indigo">Large Model</div>
+          <div class="pipe-label">structural, deep summary</div>
+        </div>
+        <span class="pipe-arrow">&rarr;</span>
+        <div class="pipe-node">
+          <div class="pipe-box">Gist</div>
+          <div class="pipe-label">zoomed-out view</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DOCUMENT INTELLIGENCE: COMPETITIVE LANDSCAPE -->
+<section class="section" id="document-intelligence">
+  <div class="container">
+    <div class="s-label">Track 1 &mdash; Document Intelligence</div>
+    <div class="s-title">Competitive Landscape</div>
+    <p class="s-desc">How Parser's document features compare to incumbents. The one clear white space: <strong style="color:#fff">no mainstream competitor ships continuous semantic-zoom summarization</strong>. <span class="dot dot-v"></span></p>
+
+    <div class="comp-table-wrap">
+      <table class="comp-table">
+        <thead>
+          <tr>
+            <th>Product</th>
+            <th>AI Summary</th>
+            <th>Inline Rewrite</th>
+            <th>Semantic Zoom</th>
+            <th>Contract Focus</th>
+            <th>Segment</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Google Docs (Gemini) <span class="dot dot-v"></span></td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+            <td>Consumer&rarr;Ent</td>
+          </tr>
+          <tr>
+            <td>MS Word (Copilot) <span class="dot dot-v"></span></td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+            <td>Prosumer&rarr;Ent</td>
+          </tr>
+          <tr>
+            <td>Grammarly/Superhuman <span class="dot dot-v"></span></td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+            <td>Consumer&rarr;Ent</td>
+          </tr>
+          <tr>
+            <td>Notion AI <span class="dot dot-v"></span></td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+            <td class="no">No</td>
+            <td>Pro/SMB/Ent</td>
+          </tr>
+          <tr>
+            <td>Spellbook <span class="dot dot-v"></span></td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+            <td class="yes">Yes</td>
+            <td>Legal</td>
+          </tr>
+          <tr>
+            <td>Luminance <span class="dot dot-v"></span></td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+            <td class="yes">Yes</td>
+            <td>Ent Legal</td>
+          </tr>
+          <tr>
+            <td>Genie AI <span class="dot dot-v"></span></td>
+            <td class="yes">Yes</td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+            <td class="yes">Yes</td>
+            <td>Consumer/SMB</td>
+          </tr>
+          <tr>
+            <td>NotebookLM <span class="dot dot-v"></span></td>
+            <td class="yes">Yes</td>
+            <td class="no">No</td>
+            <td class="partial">Partial</td>
+            <td class="no">No</td>
+            <td>Students/Research</td>
+          </tr>
+          <tr class="comp-highlight">
+            <td>Parser <span class="dot dot-a"></span></td>
+            <td>Planned</td>
+            <td>Planned</td>
+            <td style="color:var(--teal);font-weight:600">Planned</td>
+            <td>Planned</td>
+            <td>Consumer/SMB</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Prior art callout -->
+    <div style="background:var(--bg-card);border:1px solid rgba(245,158,11,0.15);border-radius:12px;padding:24px;margin-top:24px">
+      <div style="font-family:var(--font-mono);font-size:0.7rem;color:var(--dot-i);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:8px">Prior Art Note</div>
+      <p style="font-size:0.85rem;color:var(--text-muted);line-height:1.6">
+        The zoom-to-summarize concept is published academic prior art: <strong style="color:var(--text)">Rambler</strong> (CHI 2024, UC Berkeley/Google) implements a semantic zoom slider with GPT-4 at four summarization levels. <strong style="color:var(--text)">Sensecape</strong> (UIST 2023, UC San Diego) built multilevel LLM abstraction. Both cite the 1993 coinage of "semantic zoom" by Perlin &amp; Fox.
+        Parser's defensibility rests on execution, SLM/LLM tiering, and contract-vertical framing, not the core idea. <span class="dot dot-v"></span>
+      </p>
+    </div>
+
+    <!-- Market sizing -->
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px">
+      <div class="ent-card">
+        <div class="ent-card-value">$1.2&ndash;3B</div>
+        <div class="ent-card-label">CLM Market 2025 <span class="dot dot-i"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Range across Grand View, IMARC, Precedence. ~12&ndash;17% CAGR.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-card-value">$700M+</div>
+        <div class="ent-card-label">Grammarly Revenue <span class="dot dot-v"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">40M+ daily users. $13B val (2021). Acquired Coda + Superhuman.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-card-value">$1.5B</div>
+        <div class="ent-card-label">SAP acquired WalkMe <span class="dot dot-v"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Sept 2024, ~45% premium. Validates the category.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ENTERPRISE WORKFLOW AGENT -->
+<section class="section" id="enterprise-agent">
+  <div class="container">
+    <div class="s-label">Track 2 &mdash; Enterprise Workflow Agent</div>
+    <div class="s-title">Copilot for Complex Software</div>
+    <p class="s-desc">Legacy enterprise software takes many clicks for simple tasks. Parser lets users describe a goal in chat and either guides or performs the steps. Phased from guided walkthroughs to autonomous execution. <span class="dot dot-a"></span></p>
+
+    <!-- Pain point stats -->
+    <div class="ent-grid">
+      <div class="ent-card">
+        <div class="ent-card-value">~80%</div>
+        <div class="ent-card-label">Features rarely/never used <span class="dot dot-v"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Pendo 2019: only ~12% of features generate 80% of daily usage volume.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-card-value">$10.9M</div>
+        <div class="ent-card-label">Annual loss per 1K employees <span class="dot dot-v"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Whatfix/Forrester study (2026): ~728 hours lost per employee from poor digital adoption.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-card-value">$0.9&ndash;2.7B</div>
+        <div class="ent-card-label">DAP Market 2024&ndash;25 <span class="dot dot-i"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Wide analyst variance (~4x). Growing ~18&ndash;22% CAGR.</div>
+      </div>
+    </div>
+
+    <!-- Agent reliability benchmarks -->
+    <div class="s-label" style="margin-top:40px">Agent Reliability &mdash; Why Guided First</div>
+    <div class="s-title" style="font-size:1.2rem">Current computer-use agent scores <span class="dot dot-v"></span></div>
+    <p class="s-desc">Best-in-class agents score well below human reliability. This validates the phased approach: guided walkthroughs first, autonomous execution only when reliability clears a high bar.</p>
+
+    <div class="bar-chart">
+      <div class="bar-row">
+        <span class="bar-label">Human baseline</span>
+        <div class="bar-track"><div class="bar-fill dim" style="width:75%">~72&ndash;78%</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Simular (OSWorld)</span>
+        <div class="bar-track"><div class="bar-fill indigo" style="width:70%">69.9%</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">IBM CUGA (WebArena)</span>
+        <div class="bar-track"><div class="bar-fill indigo" style="width:62%">~61.7%</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">OpenAI CUA (WebArena)</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:58%">58.1%</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Anthropic (real tasks)</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:50%">~50%</div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">OpenAI CUA (OSWorld)</span>
+        <div class="bar-track"><div class="bar-fill teal" style="width:38%">38.1%</div></div>
+      </div>
+    </div>
+
+    <!-- Phased approach -->
+    <div class="phase-grid">
+      <div class="phase-card">
+        <div class="phase-num">Stage 1 &mdash; Now</div>
+        <div class="phase-title">Guided Walkthroughs <span class="dot dot-a"></span></div>
+        <div class="phase-desc">AI highlights the next step, user clicks. Natural language "how do I do X" copilot. Auto-maps single pages via DOM/accessibility tree. Technically feasible today.</div>
+        <div class="phase-status">Shippable &amp; safe</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">Stage 2 &mdash; 6&ndash;18mo</div>
+        <div class="phase-title">Demo Builder + Vendor Sales <span class="dot dot-a"></span></div>
+        <div class="phase-desc">Interactive demo creation (beachhead GTM). Begin selling embedded copilot to software vendors. Auto-mapping replaces manual DAP authoring.</div>
+        <div class="phase-status">Adjacency play</div>
+      </div>
+      <div class="phase-card">
+        <div class="phase-num">Stage 3 &mdash; 18mo+</div>
+        <div class="phase-title">Autonomous Execution <span class="dot dot-a"></span></div>
+        <div class="phase-desc">"Do it for me" mode, gated per-workflow when success rate exceeds ~90% with human-in-the-loop on consequential steps.</div>
+        <div class="phase-status">Reliability-gated</div>
+      </div>
+    </div>
+
+    <!-- Competitor landscape for enterprise track -->
+    <div style="margin-top:40px">
+      <div class="s-label">Enterprise DAP Landscape</div>
+
+      <div class="comp-table-wrap">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>Competitor</th>
+              <th>Guided</th>
+              <th>Autonomous</th>
+              <th>NL Chat</th>
+              <th>Auto-Map</th>
+              <th>Funding / Val</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>WalkMe <span class="dot dot-v"></span></td>
+              <td class="yes">Yes</td>
+              <td class="partial">Partial</td>
+              <td class="partial">Some</td>
+              <td class="partial">Partial</td>
+              <td>Acq by SAP $1.5B</td>
+            </tr>
+            <tr>
+              <td>Whatfix <span class="dot dot-v"></span></td>
+              <td class="yes">Yes</td>
+              <td class="partial">Partial</td>
+              <td class="yes">Yes</td>
+              <td class="partial">Partial</td>
+              <td>$125M E, ~$900M val</td>
+            </tr>
+            <tr>
+              <td>Pendo <span class="dot dot-v"></span></td>
+              <td class="yes">Yes</td>
+              <td class="no">Limited</td>
+              <td class="partial">Some</td>
+              <td class="partial">Partial</td>
+              <td>~$300M ARR, $2.6B val</td>
+            </tr>
+            <tr>
+              <td>Command AI <span class="dot dot-v"></span></td>
+              <td class="yes">Yes</td>
+              <td class="partial">Partial</td>
+              <td class="yes">Yes</td>
+              <td class="no">No</td>
+              <td>Acq by Amplitude ~$45M+</td>
+            </tr>
+            <tr>
+              <td>Browser Use <span class="dot dot-v"></span></td>
+              <td class="no">No</td>
+              <td class="yes">Yes</td>
+              <td class="yes">Yes</td>
+              <td class="partial">Partial</td>
+              <td>$17M seed, 79K+ GH stars</td>
+            </tr>
+            <tr>
+              <td>OpenAI Operator <span class="dot dot-v"></span></td>
+              <td class="no">No</td>
+              <td class="yes">Yes</td>
+              <td class="yes">Yes</td>
+              <td class="no">No</td>
+              <td>Part of OpenAI</td>
+            </tr>
+            <tr class="comp-highlight">
+              <td>Parser <span class="dot dot-a"></span></td>
+              <td>Planned</td>
+              <td>Planned (gated)</td>
+              <td>Planned</td>
+              <td>Planned</td>
+              <td>Not disclosed</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container" style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+    <span class="footer-left">Parser &mdash; AI + HCI Document Layer &middot; Unmodal Research</span>
+    <span class="footer-right">Concept in Development &middot; Sept 2026</span>
+  </div>
+</footer>
+
+<!-- Zoom slider interactivity -->
+<script>
+(function(){
+  var levels = document.querySelectorAll('.zoom-level');
+  var fill = document.getElementById('zoomFill');
+  var thumb = document.getElementById('zoomThumb');
+  var track = document.getElementById('zoomTrack');
+
+  function setLevel(i) {
+    var pct = (i / 3) * 100;
+    fill.style.width = pct + '%';
+    thumb.style.left = pct + '%';
+    levels.forEach(function(el, j) {
+      el.classList.toggle('active', j === i);
+    });
+  }
+
+  levels.forEach(function(el, i) {
+    el.addEventListener('click', function() { setLevel(i); });
+  });
+
+  track.addEventListener('click', function(e) {
+    var rect = track.getBoundingClientRect();
+    var pct = (e.clientX - rect.left) / rect.width;
+    var level = Math.round(pct * 3);
+    setLevel(Math.max(0, Math.min(3, level)));
+  });
+
+  // Rewrite chip toggle
+  var chips = document.querySelectorAll('.rw-chip');
+  chips.forEach(function(chip) {
+    chip.addEventListener('click', function() {
+      chips.forEach(function(c) { c.classList.remove('active'); });
+      chip.classList.add('active');
+    });
+  });
+})();
+</script>
+
+</body>
+</html>
