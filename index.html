@@ -178,6 +178,42 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
 .legend-row{display:flex;align-items:center;gap:8px;margin-bottom:4px;color:var(--text-muted)}
 .legend-row:last-child{margin-bottom:0}
 
+/* ---- PRODUCT LINKS ---- */
+a.prod-link{color:inherit;text-decoration:none;border-bottom:1px dotted var(--border);transition:color 0.2s,border-color 0.2s}
+a.prod-link:hover{color:var(--teal);border-color:var(--teal)}
+
+/* ---- TOOLTIPS ---- */
+[data-tip]{position:relative;cursor:help}
+[data-tip]::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);background:var(--bg-surface);border:1px solid var(--border);color:var(--text-muted);font-family:var(--font-sans);font-size:0.72rem;font-weight:400;font-style:normal;line-height:1.4;padding:8px 12px;border-radius:8px;white-space:normal;width:max-content;max-width:280px;opacity:0;pointer-events:none;transition:opacity 0.2s;z-index:200;text-transform:none;letter-spacing:0}
+[data-tip]:hover::after{opacity:1}
+
+/* ---- VERTICAL CARDS ---- */
+.vert-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;margin:24px 0}
+.vert-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:18px}
+.vert-card-name{font-family:var(--font-serif);font-size:0.9rem;font-weight:500;color:#fff;margin-bottom:6px}
+.vert-card-desc{font-size:0.75rem;color:var(--text-muted);line-height:1.5}
+
+/* ---- TRACK 3 ---- */
+.t3-hero{background:var(--bg-card);border:1px solid var(--border-teal);border-radius:16px;padding:40px;margin-bottom:32px;position:relative;overflow:hidden}
+.t3-hero::before{content:'';position:absolute;top:-40px;right:-40px;width:200px;height:200px;background:radial-gradient(circle,rgba(45,212,191,0.08) 0%,transparent 70%);pointer-events:none}
+.t3-flow{display:flex;align-items:center;justify-content:center;gap:0;flex-wrap:wrap;margin:32px 0}
+.t3-box{border:1px solid var(--border);border-radius:10px;padding:16px 28px;text-align:center;min-width:180px}
+.t3-box-label{font-family:var(--font-mono);font-size:0.65rem;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.06em;margin-bottom:4px}
+.t3-box-name{font-family:var(--font-serif);font-size:1rem;font-weight:500;color:#fff}
+.t3-box.legacy{border-color:rgba(239,68,68,0.2);background:rgba(239,68,68,0.04)}
+.t3-box.legacy .t3-box-name{color:#EF4444}
+.t3-box.modern{border-color:var(--border-teal);background:var(--teal-dim)}
+.t3-box.modern .t3-box-name{color:var(--teal)}
+.t3-arrow{font-size:1.5rem;color:var(--teal);margin:0 16px}
+.t3-convo{background:var(--bg-surface);border:1px solid var(--border);border-radius:12px;padding:20px;margin-top:24px}
+.t3-msg{display:flex;gap:12px;margin-bottom:12px;align-items:flex-start}
+.t3-msg:last-child{margin-bottom:0}
+.t3-msg-avatar{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:0.7rem;font-weight:600}
+.t3-msg-avatar.user{background:var(--indigo-dim);color:var(--indigo)}
+.t3-msg-avatar.ai{background:var(--teal-dim);color:var(--teal)}
+.t3-msg-text{font-size:0.85rem;color:var(--text-muted);line-height:1.5;padding-top:4px}
+.t3-msg-text strong{color:var(--text)}
+
 /* ---- FOOTER ---- */
 .footer{border-top:1px solid var(--border);padding:40px 0;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
 .footer-left{font-family:var(--font-mono);font-size:0.75rem;color:var(--text-dim)}
@@ -197,6 +233,10 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
   .footer{flex-direction:column;text-align:center}
   .bar-label{width:100px;font-size:0.6rem}
   .legend{bottom:12px;right:12px;padding:10px 14px}
+  .t3-flow{flex-direction:column;gap:8px}
+  .t3-arrow{transform:rotate(90deg)}
+  .vert-grid{grid-template-columns:1fr 1fr}
+  [data-tip]::after{left:0;transform:none;max-width:220px}
 }
 </style>
 </head>
@@ -393,7 +433,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
         </thead>
         <tbody>
           <tr>
-            <td>Google Docs (Gemini) <span class="dot dot-v"></span></td>
+            <td><a href="https://support.google.com/docs/answer/13951448" target="_blank" rel="noopener" class="prod-link" data-tip="Highlight-to-quick-actions: Rephrase, Shorten, Elaborate, Summarize. Side panel for doc-level Q&A. Requires paid Workspace plan.">Google Docs (Gemini)</a> <span class="dot dot-v"></span></td>
             <td class="yes">Yes</td>
             <td class="yes">Yes</td>
             <td class="no">No</td>
@@ -401,7 +441,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
             <td>Consumer&rarr;Ent</td>
           </tr>
           <tr>
-            <td>MS Word (Copilot) <span class="dot dot-v"></span></td>
+            <td><a href="https://support.microsoft.com/en-us/word/copilot/rewrite-text-with-copilot-in-word" target="_blank" rel="noopener" class="prod-link" data-tip="Auto Rewrite from margin icon. Summarize up to ~1.5M words (~300 pages). Tone adjustment, reorganize. Copilot license required.">MS Word (Copilot)</a> <span class="dot dot-v"></span></td>
             <td class="yes">Yes</td>
             <td class="yes">Yes</td>
             <td class="no">No</td>
@@ -409,7 +449,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
             <td>Prosumer&rarr;Ent</td>
           </tr>
           <tr>
-            <td>Grammarly/Superhuman <span class="dot dot-v"></span></td>
+            <td><a href="https://www.grammarly.com/" target="_blank" rel="noopener" class="prod-link" data-tip="40M+ DAU, $700M+ revenue. Overlay across 500K+ apps. Acquired Coda (Jan 2025) and Superhuman (July 2025). $13B val (2021), $1B financing (2025).">Grammarly/Superhuman</a> <span class="dot dot-v"></span></td>
             <td class="yes">Yes</td>
             <td class="yes">Yes</td>
             <td class="no">No</td>
@@ -417,7 +457,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
             <td>Consumer&rarr;Ent</td>
           </tr>
           <tr>
-            <td>Notion AI <span class="dot dot-v"></span></td>
+            <td><a href="https://www.notion.com/help/guides/everything-you-can-do-with-notion-ai" target="_blank" rel="noopener" class="prod-link" data-tip="Inline Ask AI on selection: grammar, clarity, tone. /summarize for doc-level. Can summarize PDFs, DOCX, and URLs.">Notion AI</a> <span class="dot dot-v"></span></td>
             <td class="yes">Yes</td>
             <td class="yes">Yes</td>
             <td class="no">No</td>
@@ -425,7 +465,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
             <td>Pro/SMB/Ent</td>
           </tr>
           <tr>
-            <td>Spellbook <span class="dot dot-v"></span></td>
+            <td><a href="https://www.spellbook.legal/" target="_blank" rel="noopener" class="prod-link" data-tip="Word add-in for contract drafting. 10M+ contracts reviewed, ~4K law firms. $50M Series B at $350M (Oct 2025). GPT-4o/GPT-5 powered.">Spellbook</a> <span class="dot dot-v"></span></td>
             <td class="yes">Yes</td>
             <td class="yes">Yes</td>
             <td class="no">No</td>
@@ -433,7 +473,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
             <td>Legal</td>
           </tr>
           <tr>
-            <td>Luminance <span class="dot dot-v"></span></td>
+            <td><a href="https://www.luminance.com/" target="_blank" rel="noopener" class="prod-link" data-tip="AI-to-AI autonomous contract negotiation. ~$30M ARR (2024 est.), ~$165M total funding. Enterprise legal focus.">Luminance</a> <span class="dot dot-v"></span></td>
             <td class="yes">Yes</td>
             <td class="yes">Yes</td>
             <td class="no">No</td>
@@ -441,7 +481,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
             <td>Ent Legal</td>
           </tr>
           <tr>
-            <td>Genie AI <span class="dot dot-v"></span></td>
+            <td><a href="https://www.genieai.co/" target="_blank" rel="noopener" class="prod-link" data-tip="Free tier: draft contracts from plain language, 'ask your document,' AI red-flag review. 500+ templates. ~$20.5M total funding (GV + Khosla).">Genie AI</a> <span class="dot dot-v"></span></td>
             <td class="yes">Yes</td>
             <td class="yes">Yes</td>
             <td class="no">No</td>
@@ -449,12 +489,20 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
             <td>Consumer/SMB</td>
           </tr>
           <tr>
-            <td>NotebookLM <span class="dot dot-v"></span></td>
+            <td><a href="https://notebooklm.google/" target="_blank" rel="noopener" class="prod-link" data-tip="Source-grounded research companion. Upload 50-300 sources. Auto-generates summaries, audio overviews, mind maps, flashcards. Free.">NotebookLM</a> <span class="dot dot-v"></span></td>
             <td class="yes">Yes</td>
             <td class="no">No</td>
             <td class="partial">Partial</td>
             <td class="no">No</td>
             <td>Students/Research</td>
+          </tr>
+          <tr>
+            <td><a href="https://www.docusign.com/products/platform/iris" target="_blank" rel="noopener" class="prod-link" data-tip="Signer-facing 'translate legalese' AI (Jan 2026). DocuSign holds ~67.6% e-sig market share. Direct threat to the consumer contract wedge.">DocuSign (Iris)</a> <span class="dot dot-v"></span></td>
+            <td class="yes">Yes</td>
+            <td class="partial">Partial</td>
+            <td class="no">No</td>
+            <td class="yes">Yes</td>
+            <td>SMB&rarr;Ent</td>
           </tr>
           <tr class="comp-highlight">
             <td>Parser <span class="dot dot-a"></span></td>
@@ -480,19 +528,57 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
     <!-- Market sizing -->
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin-top:24px">
       <div class="ent-card">
+        <div class="ent-card-value">$2&ndash;24B</div>
+        <div class="ent-card-label" data-tip="Document-centric collaboration: ~$2-2.3B. Broader collaborative writing: ~$24.2B. 8.8-13% CAGR. Key players: Microsoft, Google, Notion, Atlassian.">Doc Creation &amp; Collab Market <span class="dot dot-i"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Wide range by scope. ~$15&ndash;26B projected by 2033&ndash;34.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-card-value">$5&ndash;17B</div>
+        <div class="ent-card-label" data-tip="E-sig platform: ~$5.1B (2024) to ~$16.8B broader digital signatures (2026). 22-35% CAGR. DocuSign holds ~67.6% market share. Projected $24.5-121B by 2030-33.">E-Signature Market <span class="dot dot-v"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">22&ndash;35% CAGR. DocuSign 67.6% share. Projected $24&ndash;121B by 2030&ndash;33.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-card-value">73%</div>
+        <div class="ent-card-label" data-tip="University of Law UK study. 91% accept T&Cs without reading (Goldberg Law). Up to 98% don't fully read ToS. Top reasons: too long, too complex, low perceived payoff.">Don't Read Before Signing <span class="dot dot-v"></span></div>
+        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">University of Law UK: 73% don't properly read contracts. 91% skip T&amp;Cs entirely.</div>
+      </div>
+      <div class="ent-card">
         <div class="ent-card-value">$1.2&ndash;3B</div>
-        <div class="ent-card-label">CLM Market 2025 <span class="dot dot-i"></span></div>
+        <div class="ent-card-label" data-tip="Contract Lifecycle Management. Range across Grand View ($1.78B), IMARC ($2.05B), Precedence ($2.96B). 12-17% CAGR. Incumbents: Ironclad (~$150M ARR), LinkSquares, Spellbook.">CLM Market 2025 <span class="dot dot-i"></span></div>
         <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Range across Grand View, IMARC, Precedence. ~12&ndash;17% CAGR.</div>
       </div>
-      <div class="ent-card">
-        <div class="ent-card-value">$700M+</div>
-        <div class="ent-card-label">Grammarly Revenue <span class="dot dot-v"></span></div>
-        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">40M+ daily users. $13B val (2021). Acquired Coda + Superhuman.</div>
-      </div>
-      <div class="ent-card">
-        <div class="ent-card-value">$1.5B</div>
-        <div class="ent-card-label">SAP acquired WalkMe <span class="dot dot-v"></span></div>
-        <div class="ent-card-desc" style="margin-top:8px;font-size:0.75rem">Sept 2024, ~45% premium. Validates the category.</div>
+    </div>
+
+    <!-- E-Signature underserved verticals -->
+    <div style="margin-top:32px">
+      <div class="s-label">Underserved Verticals &mdash; "Summarize Before You Sign"</div>
+      <p style="font-size:0.85rem;color:var(--text-muted);margin-bottom:20px;max-width:620px">Verticals where document comprehension at signing time is highest-stakes and least supported by current tools. <span class="dot dot-v"></span></p>
+
+      <div class="vert-grid">
+        <div class="vert-card" data-tip="~4.1M US home sales/year (2025). Each transaction involves 100-400 pages. Agents spend 22% of time on paperwork (NAR). Buyers rarely read full closing packages.">
+          <div class="vert-card-name">Real Estate</div>
+          <div class="vert-card-desc">100&ndash;400 page closing packages. 4.1M US sales/yr. Buyers almost never read the full stack.</div>
+        </div>
+        <div class="vert-card" data-tip="28% CAGR in e-sig adoption. ~12% of total e-sig market. Consent forms, clinical trials, HIPAA disclosures are dense and high-stakes.">
+          <div class="vert-card-name">Healthcare</div>
+          <div class="vert-card-desc">Consent forms, clinical trial agreements, HIPAA disclosures. Dense, high-stakes, growing 28% CAGR.</div>
+        </div>
+        <div class="vert-card" data-tip="BFSI holds 28.2% of e-sig market (2025). Policies average 20-40 pages of exclusions and riders. Policyholders famously don't read exclusions.">
+          <div class="vert-card-name">Insurance</div>
+          <div class="vert-card-desc">20&ndash;40 page policies with exclusions and riders. Policyholders famously don't read them.</div>
+        </div>
+        <div class="vert-card" data-tip="Change orders, lien waivers, subcontractor agreements are complex. High litigation rates over disputed terms. Low digital maturity.">
+          <div class="vert-card-name">Construction</div>
+          <div class="vert-card-desc">Change orders, lien waivers, subcontractor terms. High litigation from disputed clauses.</div>
+        </div>
+        <div class="vert-card" data-tip="20% annual increase in public-sector e-sig adoption. Permits, zoning, procurement contracts. Plain-language requirements exist but are unenforced.">
+          <div class="vert-card-name">Government</div>
+          <div class="vert-card-desc">Permits, zoning, procurement. Plain-language requirements exist but are unenforced.</div>
+        </div>
+        <div class="vert-card" data-tip="Loan docs average 30-80 pages. SBA and fintech lending surging. Borrowers sign personal guarantees without understanding exposure.">
+          <div class="vert-card-name">SMB Lending</div>
+          <div class="vert-card-desc">30&ndash;80 page loan docs. Borrowers sign personal guarantees without understanding exposure.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -596,7 +682,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
           </thead>
           <tbody>
             <tr>
-              <td>WalkMe <span class="dot dot-v"></span></td>
+              <td><a href="https://www.walkme.com/ai/context-matters/" target="_blank" rel="noopener" class="prod-link" data-tip="Acquired by SAP for $1.5B (Sept 2024). WalkMeX AI powers SAP Joule copilot. DeepUI for partial auto-mapping. $60K-$405K/yr enterprise contracts.">WalkMe</a> <span class="dot dot-v"></span></td>
               <td class="yes">Yes</td>
               <td class="partial">Partial</td>
               <td class="partial">Some</td>
@@ -604,7 +690,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
               <td>Acq by SAP $1.5B</td>
             </tr>
             <tr>
-              <td>Whatfix <span class="dot dot-v"></span></td>
+              <td><a href="https://www.whatfix.com/" target="_blank" rel="noopener" class="prod-link" data-tip="$138.8M revenue (2024). $125M Series E at ~$900M val (Sept 2024, Warburg Pincus). Web, desktop, mobile, Citrix support. ~$32K/yr avg deal.">Whatfix</a> <span class="dot dot-v"></span></td>
               <td class="yes">Yes</td>
               <td class="partial">Partial</td>
               <td class="yes">Yes</td>
@@ -612,7 +698,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
               <td>$125M E, ~$900M val</td>
             </tr>
             <tr>
-              <td>Pendo <span class="dot dot-v"></span></td>
+              <td><a href="https://www.pendo.io/" target="_blank" rel="noopener" class="prod-link" data-tip="~$300M ARR (2025), $2.6B val (2021). Analytics-first product adoption. 2019 report: ~12% features drive 80% of usage. $50K+ enterprise pricing.">Pendo</a> <span class="dot dot-v"></span></td>
               <td class="yes">Yes</td>
               <td class="no">Limited</td>
               <td class="partial">Some</td>
@@ -620,7 +706,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
               <td>~$300M ARR, $2.6B val</td>
             </tr>
             <tr>
-              <td>Command AI <span class="dot dot-v"></span></td>
+              <td><a href="https://www.commandai.com/" target="_blank" rel="noopener" class="prod-link" data-tip="Acquired by Amplitude ~$45M+ (Oct 2024). Cmd+K + chat copilot. Single-line install, 25M+ end users. $23.8M raised, ~30 employees.">Command AI</a> <span class="dot dot-v"></span></td>
               <td class="yes">Yes</td>
               <td class="partial">Partial</td>
               <td class="yes">Yes</td>
@@ -628,7 +714,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
               <td>Acq by Amplitude ~$45M+</td>
             </tr>
             <tr>
-              <td>Browser Use <span class="dot dot-v"></span></td>
+              <td><a href="https://browser-use.com/" target="_blank" rel="noopener" class="prod-link" data-tip="Open-source browser automation. $17M seed (March 2025). 79K+ GitHub stars. NL commands to DOM parsing. Free OSS + ~$30/mo cloud.">Browser Use</a> <span class="dot dot-v"></span></td>
               <td class="no">No</td>
               <td class="yes">Yes</td>
               <td class="yes">Yes</td>
@@ -636,7 +722,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
               <td>$17M seed, 79K+ GH stars</td>
             </tr>
             <tr>
-              <td>OpenAI Operator <span class="dot dot-v"></span></td>
+              <td><a href="https://openai.com/index/introducing-operator/" target="_blank" rel="noopener" class="prod-link" data-tip="Computer-use agent (CUA). 38.1% OSWorld, 58.1% WebArena, 87% WebVoyager. Pro subscription. Still experimental.">OpenAI Operator</a> <span class="dot dot-v"></span></td>
               <td class="no">No</td>
               <td class="yes">Yes</td>
               <td class="yes">Yes</td>
@@ -644,7 +730,7 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
               <td>Part of OpenAI</td>
             </tr>
             <tr>
-              <td>Supademo <span class="dot dot-v"></span></td>
+              <td><a href="https://supademo.com/" target="_blank" rel="noopener" class="prod-link" data-tip="Interactive demo builder. HTML capture for auto-mapping. Free tier + paid plans. Leading demo-builder in the category alongside Navattic and Storylane.">Supademo</a> <span class="dot dot-v"></span></td>
               <td class="yes">Yes (demo)</td>
               <td class="no">No</td>
               <td class="partial">Some</td>
@@ -661,6 +747,74 @@ body{background:var(--bg);color:var(--text);font-family:var(--font-sans);font-we
             </tr>
           </tbody>
         </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRACK 3: ONE CLEAR OFFERING -->
+<section class="section" id="legacy-modernization">
+  <div class="container">
+    <div class="s-label">Track 3 &mdash; One Clear Offering</div>
+    <div class="s-title">Make Your Legacy Solution a Modern AI Solution <span class="dot dot-a"></span></div>
+    <p class="s-desc">Enterprise software doesn't need to be rebuilt from scratch. Parser sits on top of what already exists and makes it conversational. Like Jarvis for your enterprise tools.</p>
+
+    <div class="t3-hero">
+      <div class="t3-flow">
+        <div class="t3-box legacy">
+          <div class="t3-box-label">Before</div>
+          <div class="t3-box-name">Legacy Software</div>
+        </div>
+        <span class="t3-arrow">&rarr;</span>
+        <div class="t3-box" style="border-color:var(--indigo);background:var(--indigo-dim)">
+          <div class="t3-box-label">+ Parser</div>
+          <div class="t3-box-name" style="color:var(--indigo)">AI Interaction Layer</div>
+        </div>
+        <span class="t3-arrow">&rarr;</span>
+        <div class="t3-box modern">
+          <div class="t3-box-label">After</div>
+          <div class="t3-box-name">Modern AI OS</div>
+        </div>
+      </div>
+
+      <p style="text-align:center;font-size:0.85rem;color:var(--text-muted);margin-top:24px;max-width:500px;margin-left:auto;margin-right:auto">
+        No migration. No rebuild. Parser overlays on your existing tool and turns menu-diving into conversation.
+      </p>
+    </div>
+
+    <!-- Conversational demo -->
+    <div class="s-label">What it feels like</div>
+    <div class="t3-convo">
+      <div class="t3-msg">
+        <div class="t3-msg-avatar user">You</div>
+        <div class="t3-msg-text">"Create a purchase order for 500 units of Part #A2847 from Acme Corp, rush delivery"</div>
+      </div>
+      <div class="t3-msg">
+        <div class="t3-msg-avatar ai">P</div>
+        <div class="t3-msg-text"><strong>Parser:</strong> I'll create that PO. Opening Procurement &rarr; New Order. I've filled in Part #A2847, qty 500, vendor Acme Corp. <strong>Rush delivery adds a 15% surcharge ($2,340).</strong> Should I submit for approval?</div>
+      </div>
+      <div class="t3-msg">
+        <div class="t3-msg-avatar user">You</div>
+        <div class="t3-msg-text">"Yes, route to Sarah for sign-off"</div>
+      </div>
+      <div class="t3-msg">
+        <div class="t3-msg-avatar ai">P</div>
+        <div class="t3-msg-text"><strong>Parser:</strong> Done. PO #8847 submitted and routed to Sarah Chen. She'll get a notification. Estimated approval: same day based on her response pattern.</div>
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;margin-top:32px">
+      <div class="ent-card">
+        <div class="ent-card-title">From 30 clicks to one sentence</div>
+        <div class="ent-card-desc">Users describe what they want in natural language. Parser navigates the legacy UI, fills forms, and executes the workflow. Human confirms before consequential actions.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-card-title">No rip-and-replace</div>
+        <div class="ent-card-desc">Parser works as an overlay. The legacy system stays intact. IT doesn't need to migrate data or retrain teams. The AI layer learns the existing workflow graph.</div>
+      </div>
+      <div class="ent-card">
+        <div class="ent-card-title">Progressive trust</div>
+        <div class="ent-card-desc">Starts by showing the user what to click (guided). Graduates to doing it with confirmation (co-pilot). Eventually acts autonomously on routine tasks the user has approved.</div>
       </div>
     </div>
   </div>
